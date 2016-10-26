@@ -93,8 +93,9 @@ void print_tour(int n_cities,int *a,char *file_name)
 //fprintf(stderr,"run the command\n  epspdf %s\nto convert the encapsulated postscript file to pdf\n",file_name);
 }
 
+double distMatrix[max_n_cities][max_n_cities];
 
-#if 1
+#if 0
 double dist(int i,int j)
 {
   double dx = city_x[i] - city_x[j];
@@ -102,7 +103,6 @@ double dist(int i,int j)
   return sqrt(dx * dx + dy * dy);
 }
 #else
-double distMatrix[max_n_cities][max_n_cities];
 # define dist(i,j) distMatrix[i][j]
 #endif
 
@@ -112,6 +112,19 @@ int min_a[max_n_cities];
 double max_d;
 int max_a[max_n_cities];
 
+void calculate_all_distances(unsigned int n)
+{
+    int i,j;
+    double dx, dy;
+    
+    for(i = 0;i < n;i++){
+		for(j = 0;j < n;j++){
+		    dx = city_x[i] - city_x[j];
+		    dy = city_y[i] - city_y[j];
+			distMatrix[i][j] = sqrt(dx * dx + dy * dy);
+		}
+	}
+}
 void generate_all_permutations(unsigned int n,unsigned int m,int a[])  // int a[] is a synonym of int *a
 {
   unsigned int i;
@@ -167,8 +180,11 @@ int main(void)
   int n_cities,i,a[max_n_cities];
   char file_name[32];
   double dt;
-
-  rand_city_coords(123456);
+  
+  rand_city_coords(83087);
+  
+  calculate_all_distances(max_n_cities);
+  
   for(n_cities = 3;n_cities <= max_n_cities;n_cities++)
   {
     for(i = 0;i < n_cities;i++)
